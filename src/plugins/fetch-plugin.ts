@@ -18,16 +18,18 @@ export const fetchPlugin = (inputCode: string) => {
 				};
 			});
 
-			build.onLoad({ filter: /.css$/ }, async (args: any) => {
+			build.onLoad({ filter: /.*/ }, async (args: any) => {
+				// Check if the file is already cached; if not, fetch it from the CDN
 				const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(args.path);
 				// If the file is cached, return it immediately
 				if (cachedResult) {
 					return cachedResult;
 				}
+			});
 
+			build.onLoad({ filter: /.css$/ }, async (args: any) => {
 				// Fetch the file from the specified path using Axios
 				const { data, request } = await axios.get(args.path);
-
 				const escaped = data.replace(/\n/g, '').replace(/"/g, '\\"').replace(/'/g, "\\'");
 				const contents = `
                         const style = document.createElement('style');
@@ -42,18 +44,10 @@ export const fetchPlugin = (inputCode: string) => {
 				};
 				// Store the response in the cache
 				await fileCache.setItem(args.path, result);
-
 				return result;
 			});
 
-			// Load modules using this plugin
 			build.onLoad({ filter: /.*/ }, async (args: any) => {
-				// Check if the file is already cached; if not, fetch it from the CDN
-				const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(args.path);
-				// If the file is cached, return it immediately
-				if (cachedResult) {
-					return cachedResult;
-				}
 				// Fetch the file from the specified path using Axios
 				const { data, request } = await axios.get(args.path);
 				const result: esbuild.OnLoadResult = {
@@ -63,7 +57,6 @@ export const fetchPlugin = (inputCode: string) => {
 				};
 				// Store the response in the cache
 				await fileCache.setItem(args.path, result);
-
 				return result;
 			});
 		}
