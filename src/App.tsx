@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as esbuild from 'esbuild-wasm';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
+import CodeEditor from './components/code-editor';
 
 function App() {
 	// State for user input and transpiled code
@@ -40,14 +41,21 @@ function App() {
 		// Set the transpiled code in the state
 		setCode(result.outputFiles[0].text);
 	};
+
+	const html = `
+		<script>
+		${code}
+		</script> 
+	`;
 	return (
 		<div>
+			<CodeEditor />
 			<textarea onChange={(e) => setInput(e.target.value)} value={input} />
 			<div>
 				<button onClick={onClickHandler}>Submit</button>
 			</div>
 			<pre>{code}</pre>
-			<iframe src="/test.html" sandbox="" />
+			<iframe srcDoc={html} sandbox="" />
 		</div>
 	);
 }
