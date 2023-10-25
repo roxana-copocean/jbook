@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
 import * as esbuild from 'esbuild-wasm';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
@@ -49,13 +50,13 @@ function App() {
 	`;
 	return (
 		<div>
-			<CodeEditor initialValue="jBook" onChange={(value) => setInput(value)} />
+			<CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)} />
 			<textarea onChange={(e) => setInput(e.target.value)} value={input} />
 			<div>
 				<button onClick={onClickHandler}>Submit</button>
 			</div>
 			<pre>{code}</pre>
-			<iframe srcDoc={html} sandbox="" />
+			<iframe srcDoc={html} sandbox="allow-scripts allow-same-origin" />
 		</div>
 	);
 }
