@@ -5,6 +5,8 @@ import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
 import CodeEditor from './components/code-editor';
 
+import Preview from './components/preview';
+
 function App() {
 	// State for user input and transpiled code
 	const [ input, setInput ] = useState('');
@@ -28,6 +30,7 @@ function App() {
 		if (!ref.current) {
 			return;
 		}
+
 		const result = await ref.current.build({
 			entryPoints: [ 'index.js' ],
 			bundle: true,
@@ -43,20 +46,15 @@ function App() {
 		setCode(result.outputFiles[0].text);
 	};
 
-	const html = `
-		<script>
-		${code}
-		</script> 
-	`;
 	return (
 		<div>
 			<CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)} />
-			<textarea onChange={(e) => setInput(e.target.value)} value={input} />
+
 			<div>
 				<button onClick={onClickHandler}>Submit</button>
 			</div>
 			<pre>{code}</pre>
-			<iframe srcDoc={html} sandbox="allow-scripts allow-same-origin" />
+			<Preview code={code} />
 		</div>
 	);
 }
