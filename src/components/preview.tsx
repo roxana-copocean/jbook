@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import './preview.css';
+
 interface PreviewProps {
 	code: string;
 }
@@ -32,7 +34,11 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
 		},
 		[ code ]
 	);
-	return <iframe title="preview" ref={iframeRef} sandbox="allow-scripts" srcDoc={html} />;
+	return (
+		<div className="iframe-wrapper">
+			<iframe title="preview" ref={iframeRef} sandbox="allow-scripts" srcDoc={html} />
+		</div>
+	);
 };
 
 export default Preview;

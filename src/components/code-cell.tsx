@@ -15,12 +15,12 @@ export default function CodeCell() {
 
 	return (
 		<Resizable direction="vertical">
-			<div>
-				<CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)} />
-				<div>
-					<button onClick={onClickHandler}>Submit</button>
-				</div>
-				<pre>{code}</pre>
+			<div style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
+				<Resizable direction="horizontal">
+					<CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)} />
+
+					<pre>{code}</pre>
+				</Resizable>
 				<Preview code={code} />
 			</div>
 		</Resizable>
