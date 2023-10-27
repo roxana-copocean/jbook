@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import transpileAndBundle from '../bundler';
 import CodeEditor from './code-editor';
 import Preview from './preview';
@@ -8,10 +8,18 @@ export default function CodeCell() {
 	const [ input, setInput ] = useState('');
 	const [ code, setCode ] = useState('');
 
-	// const onClickHandler = async () => {
-	// 	const output = await transpileAndBundle(input);
-	// 	setCode(output);
-	// };
+	useEffect(
+		() => {
+			const timer = setTimeout(async () => {
+				const output = await transpileAndBundle(input);
+				setCode(output);
+			}, 1000);
+			return () => {
+				clearTimeout(timer);
+			};
+		},
+		[ input ]
+	);
 
 	return (
 		<Resizable direction="vertical">
