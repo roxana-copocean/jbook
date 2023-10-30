@@ -3,8 +3,10 @@ import './preview.css';
 
 interface PreviewProps {
 	code: string;
+	err: string;
 }
 
+// Define the HTML template that will be displayed in the iframe.
 const html = `
 <html>
 <head>
@@ -13,32 +15,43 @@ const html = `
 <body>
 <div id="root"></div>
 <script>
+const handleError = (err) => {
+	const root = document.getElementById("root");
+	root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + 
+	'</div>';
+	console.error(err);
+}
+window.addEventListener("error", (event) => {
+	handleError(event.error)
+})
 window.addEventListener("message", (event) => {
     try{
         eval(event.data);
     }catch(err){
-        const root = document.getElementById("root");
-        root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + 
-        '</div>';
-        console.error(err);
+        handleError(err)
     }
 },false);
         </script>
 </body>
 </html>
 `;
-const Preview: React.FC<PreviewProps> = ({ code }) => {
+const Preview: React.FC<PreviewProps> = ({ code, err }) => {
 	const iframeRef = useRef<any>();
 	useEffect(
 		() => {
 			iframeRef.current.srcdoc = html;
-			iframeRef.current.contentWindow.postMessage(code, '*');
+			setTimeout(() => {
+				iframeRef.current.contentWindow.postMessage(code, '*');
+			}, 100);
 		},
 		[ code ]
 	);
+
+	console.log(err);
 	return (
 		<div className="iframe-wrapper">
 			<iframe title="preview" ref={iframeRef} sandbox="allow-scripts" srcDoc={html} />
+			{err && <div className="preview-error">{err}</div>}
 		</div>
 	);
 };

@@ -6,13 +6,15 @@ import Resizable from './resizable';
 export default function CodeCell() {
 	// State for user input and transpiled code
 	const [ input, setInput ] = useState('');
+	const [ err, setErr ] = useState('');
 	const [ code, setCode ] = useState('');
 
 	useEffect(
 		() => {
 			const timer = setTimeout(async () => {
 				const output = await transpileAndBundle(input);
-				setCode(output);
+				setCode(output.code);
+				setErr(output.err);
 			}, 1000);
 			return () => {
 				clearTimeout(timer);
@@ -26,9 +28,8 @@ export default function CodeCell() {
 			<div style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
 				<Resizable direction="horizontal">
 					<CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)} />
-					<pre>{code}</pre>
 				</Resizable>
-				<Preview code={code} />
+				<Preview code={code} err={err} />
 			</div>
 		</Resizable>
 	);
