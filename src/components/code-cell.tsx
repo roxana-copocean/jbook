@@ -11,7 +11,7 @@ interface CodeCellProps {
 }
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 	// State for user input and transpiled code
-	const [ input, setInput ] = useState('');
+
 	const [ err, setErr ] = useState('');
 	const [ code, setCode ] = useState('');
 
