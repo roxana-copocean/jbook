@@ -17,15 +17,14 @@ const CellList: React.FC = () => {
 
 	const renederedCells = cells.map((cell) => (
 		<React.Fragment key={cell.id}>
-			<AddCell nextCellId={cell.id} />
 			<CellListItem cell={cell} />
+			<AddCell prevCellId={cell.id} />
 		</React.Fragment>
 	));
 	return (
 		<div>
+			<AddCell prevCellId={null} makeVisible={cells.length === 0} />
 			{renederedCells}
-
-			<AddCell nextCellId={null} makeVisible={cells.length === 0} />
 		</div>
 	);
 };
