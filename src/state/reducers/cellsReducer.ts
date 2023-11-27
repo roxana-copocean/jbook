@@ -45,7 +45,7 @@ const cellReducer = produce((state: CellsState = initialState, action: Action) =
 			state.order[targetIndex] = action.payload.id;
 			return state;
 		// insert cell before using immer
-		case ActionType.INSERT_CELL_BEFORE:
+		case ActionType.INSERT_CELL_AFTER:
 			const cell: Cell = {
 				content: '',
 				type: action.payload.type,
