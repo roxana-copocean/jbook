@@ -4,11 +4,13 @@ import { Action } from '../actions';
 
 // Bundle State Interface
 interface BundleState {
-	[key: string]: {
-		loading: boolean;
-		code: string;
-		err: string;
-	};
+	[key: string]:
+		| {
+				loading: boolean;
+				code: string;
+				err: string;
+			}
+		| undefined;
 }
 
 // Initial State
