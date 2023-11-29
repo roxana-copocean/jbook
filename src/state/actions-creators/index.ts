@@ -6,9 +6,7 @@ import {
 	DeleteCellAction,
 	InsertCellAfterAction,
 	MoveCellAction,
-	Direction,
-	BundleCompleteAction,
-	BundleStartAction
+	Direction
 } from '../actions';
 import transpileAndBundle from '../../bundler';
 import { CellTypes } from '../cell';
