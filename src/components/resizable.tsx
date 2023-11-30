@@ -11,6 +11,7 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
 	const [ innerWidth, setInnerWidth ] = useState(window.innerWidth);
 	const [ innerHeight, setInnerHeight ] = useState(window.innerHeight);
 	const [ width, setWidth ] = useState(window.innerWidth * 0.75);
+	// const [ height, setHeight ] = useState(window.innerHeight * 0.75);
 	let resizableProps: ResizableBoxProps;
 
 	useEffect(
@@ -41,11 +42,11 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
 	if (direction === 'horizontal') {
 		resizableProps = {
 			className: 'resize-horizontal',
-			width: width,
 			height: Infinity,
 			resizeHandles: [ 'e' ],
 			maxConstraints: [ innerWidth * 0.75, Infinity ],
 			minConstraints: [ innerWidth * 0.2, Infinity ],
+			width: width,
 			onResizeStop: (event, data) => {
 				setWidth(data.size.width);
 			}
@@ -54,7 +55,7 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
 		// vertical resize
 		resizableProps = {
 			height: 300,
-			width: innerWidth,
+			width: Infinity,
 			resizeHandles: [ 's' ],
 			maxConstraints: [ Infinity, innerHeight * 0.95 ],
 			minConstraints: [ Infinity, innerHeight * 0.07 ]
