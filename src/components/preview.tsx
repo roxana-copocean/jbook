@@ -42,7 +42,7 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
 			iframeRef.current.srcdoc = html;
 			setTimeout(() => {
 				iframeRef.current.contentWindow.postMessage(code, '*');
-			}, 100);
+			}, 50);
 		},
 		[ code ]
 	);
