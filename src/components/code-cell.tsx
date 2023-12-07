@@ -26,7 +26,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 		const showFunction = `
 	        import _React from "react";
 			import _ReactDOM from "react-dom";
-			function show(value){
+			var show = (value) => {
 				if(typeof value === "object"){
 					if(value.$$typeof && value.props){
                        _ReactDOM.render(value, document.querySelector("#root") );
@@ -40,9 +40,15 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 				}
 			}
 		`
-		const cumulativeCode = [showFunction]
+		const showFunctionNoOpperation = "var show = () => {}"
+		const cumulativeCode = []
 		for(let c of orderedCells){
 			if(c.type === "code"){
+				if(c.id === cell.id){
+					cumulativeCode.push(showFunction)
+				}else{
+					cumulativeCode.push(showFunctionNoOpperation)
+				}
 				cumulativeCode.push(c.content)
 			}
 			if(c.id === cell.id){
