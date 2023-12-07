@@ -13,28 +13,34 @@ interface CodeCellProps {
 }
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 	const { updateCell, createBundle } = useActions();
-	const bundle = useTypedSelector((state) => state.bundle?.[cell.id]);
-	const cumulativeCodeRender = useTypedSelector((state) =>{
+	const bundle = useTypedSelector((state) => state.bundle?.[cell.id])?? { code: '', err: '', loading: false };
+
+
+	const cumulativeCodeRender = useTypedSelector((state) => {
 		if(!state.cells){
-			return
+			return ""
 		}
     const {order, data } = state.cells
 		const orderedCells = order.map((id) => data[id])
-		const cumulativeCode = [`
-			const show = (value) => {
+
+		const showFunction = `
+	        import _React from "react";
+			import _ReactDOM from "react-dom";
+			function show(value){
 				if(typeof value === "object"){
 					if(value.$$typeof && value.props){
-                      ReactDOM.render(value,document.querySelector("#root") );
+                       _ReactDOM.render(value, document.querySelector("#root") );
 					}else{
 
-						document.querySelector("#root").innerHTML = JSON.stringify(value);
+						 document.querySelector("#root").innerHTML = JSON.stringify(value);
 					}
-				}else{
+				} else  {
 
-					document.querySelector("#root").innerHTML = value;
+					 document.querySelector("#root").innerHTML = value;
 				}
 			}
-		`]
+		`
+		const cumulativeCode = [showFunction]
 		for(let c of orderedCells){
 			if(c.type === "code"){
 				cumulativeCode.push(c.content)
@@ -43,24 +49,24 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 				break
 			}
 		}
-		return cumulativeCode
+		return cumulativeCode.join("\n")
 	})
 	
    useEffect(
 		() => {
 			if(!bundle){
-				createBundle(cell.id, cell.content)
+				createBundle(cell.id, cumulativeCodeRender)
 				return
 			}
 			const timer = setTimeout(async () => {
-				createBundle(cell.id, cell.content);
+				createBundle(cell.id, cumulativeCodeRender);
 			}, 1000);
 			return () => {
 				clearTimeout(timer);
 			};
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ cell.content, cell.id, createBundle ]
+		[ cell.content, cell.id, createBundle,  cumulativeCodeRender]
 	);
 
 	return (
@@ -76,6 +82,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 					<div className='progress-cover'>
 						<progress className='progress is-small is-primary' max="100">Loading</progress>
 					</div>
+				  
 					) : (<Preview code={bundle.code} err={bundle.err} />)
 				}
 				</div>
