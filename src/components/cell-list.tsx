@@ -2,6 +2,7 @@ import React from 'react';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import CellListItem from './cell-list-item';
 import AddCell from './add-cell';
+import './cell-list.css';
 
 const CellList: React.FC = () => {
 	const cells = useTypedSelector(({ cells }) => {
@@ -22,7 +23,7 @@ const CellList: React.FC = () => {
 		</React.Fragment>
 	));
 	return (
-		<div>
+		<div className="cell-list">
 			<AddCell prevCellId={null} makeVisible={cells.length === 0} />
 			{renederedCells}
 		</div>
